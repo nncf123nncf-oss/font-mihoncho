@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フォント見本帳</title>
+<meta name="description" content="自分の文章で、パソコンに入っている書体を一斉に見比べる見本帳。チラシや資料のフォント選びに。">
+<style>
+  :root {
+    --bg: #16181d;
+    --card: #1e2127;
+    --ink: #f2efe9;
+    --sub: #9aa0ab;
+    --faint: #6b7280;
+    --accent: #d9a441;
+    --line: #2a2e37;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f3f0;
+      --card: #ffffff;
+      --ink: #23262b;
+      --sub: #5b6470;
+      --faint: #9096a1;
+      --accent: #8a651c;
+      --line: #dcdee3;
+      color-scheme: light;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+  header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  header h1::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    margin-right: 10px;
+  }
+  header p {
+    color: var(--sub);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .input-block {
+    margin-top: 24px;
+  }
+  .input-block label {
+    display: block;
+    font-size: 14px;
+    color: var(--sub);
+    margin-bottom: 8px;
+  }
+  .input-block input {
+    width: 100%;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .input-block input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: transparent;
+  }
+  .count {
+    font-size: 13px;
+    color: var(--faint);
+    margin: 16px 0 8px;
+  }
+  .specimen {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px;
+    margin-top: 12px;
+  }
+  .spec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .spec-name {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .tag {
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 1px 8px;
+    white-space: nowrap;
+  }
+  .tag.plain {
+    color: var(--faint);
+    border-color: var(--line);
+  }
+  .sample {
+    font-size: 22px;
+    line-height: 1.5;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+    min-height: 33px;
+  }
+  .spec-foot {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .css-value {
+    font-family: Consolas, Menlo, monospace;
+    font-size: 12px;
+    color: var(--sub);
+    overflow-wrap: anywhere;
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+  .copy-btn {
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--accent);
+    background: none;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 16px;
+    min-height: 44px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  .copy-btn:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .copy-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (max-width: 480px) {
+    .spec-foot { flex-direction: column; align-items: stretch; }
+    .css-value { flex-basis: auto; }
+    .copy-btn { width: 100%; }
+  }
+  footer {
+    margin-top: 32px;
+    font-size: 13px;
+    color: var(--faint);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>フォント見本帳</h1>
+    <p>自分の文章で、この端末に入っている書体を一斉に見比べます。</p>
+  </header>
+
+  <div class="input-block">
+    <label for="sample-input">見本にする文章（入力すると全部の見本が変わります）</label>
+    <input type="text" id="sample-input" value="価格改定のお知らせ 3,980円→4,500円" autocomplete="off">
+  </div>
+
+  <p class="count" id="count"></p>
+
+  <div id="list"></div>
+
+  <footer>この端末に入っていない書体は、代わりの書体で表示されます。</footer>
+</div>
+
+<script>
+  const FONTS = [
+    { name: "游ゴシック",           css: '"Yu Gothic", "YuGothic", sans-serif',                              os: "両方" },
+    { name: "游明朝",               css: '"Yu Mincho", "YuMincho", serif',                                   os: "両方" },
+    { name: "メイリオ",             css: '"Meiryo", sans-serif',                                             os: "Windows" },
+    { name: "BIZ UDPゴシック",      css: '"BIZ UDPGothic", sans-serif',                                      os: "Windows" },
+    { name: "BIZ UDP明朝",          css: '"BIZ UDPMincho", serif',                                           os: "Windows" },
+    { name: "UD デジタル 教科書体", css: '"UD Digi Kyokasho N-R", "UD デジタル 教科書体 N-R", sans-serif',   os: "Windows" },
+    { name: "MS Pゴシック",         css: '"MS PGothic", "ＭＳ Ｐゴシック", sans-serif',                      os: "Windows" },
+    { name: "MS P明朝",             css: '"MS PMincho", "ＭＳ Ｐ明朝", serif',                               os: "Windows" },
+    { name: "ヒラギノ角ゴシック",   css: '"Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif',         os: "Mac" },
+    { name: "ヒラギノ明朝",         css: '"Hiragino Mincho ProN", serif',                                    os: "Mac" },
+    { name: "ヒラギノ丸ゴ",         css: '"Hiragino Maru Gothic ProN", sans-serif',                          os: "Mac" },
+    { name: "クレー",               css: '"Klee", cursive',                                                  os: "Mac" },
+    { name: "筑紫A丸ゴシック",      css: '"Tsukushi A Round Gothic", sans-serif',                            os: "Mac" },
+    { name: "Segoe UI",             css: '"Segoe UI", sans-serif',                                           os: "Windows", latin: true },
+    { name: "Arial",                css: 'Arial, sans-serif',                                                os: "両方",    latin: true },
+    { name: "Times New Roman",      css: '"Times New Roman", serif',                                         os: "両方",    latin: true },
+    { name: "Georgia",              css: 'Georgia, serif',                                                   os: "両方",    latin: true },
+    { name: "Verdana",              css: 'Verdana, sans-serif',                                              os: "両方",    latin: true },
+    { name: "Courier New",          css: '"Courier New", monospace',                                         os: "両方",    latin: true },
+    { name: "system-ui（この端末の標準）", css: 'system-ui, sans-serif',                                     os: "どの端末でも" }
+  ];
+
+  const list = document.getElementById("list");
+  const input = document.getElementById("sample-input");
+  const count = document.getElementById("count");
+  const samples = [];
+
+  count.textContent = "全" + FONTS.length + "書体";
+
+  for (const font of FONTS) {
+    const card = document.createElement("section");
+    card.className = "specimen";
+
+    const head = document.createElement("div");
+    head.className = "spec-head";
+
+    const name = document.createElement("span");
+    name.className = "spec-name";
+    name.textContent = font.name;
+    head.appendChild(name);
+
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = font.os;
+    head.appendChild(tag);
+
+    if (font.latin) {
+      const latinTag = document.createElement("span");
+      latinTag.className = "tag plain";
+      latinTag.textContent = "英数字向け";
+      head.appendChild(latinTag);
+    }
+
+    const sample = document.createElement("p");
+    sample.className = "sample";
+    sample.style.fontFamily = font.css;
+    sample.textContent = input.value;
+    samples.push(sample);
+
+    const foot = document.createElement("div");
+    foot.className = "spec-foot";
+
+    const cssValue = document.createElement("code");
+    cssValue.className = "css-value";
+    const declaration = "font-family: " + font.css + ";";
+    cssValue.textContent = declaration;
+
+    const btn = document.createElement("button");
+    btn.className = "copy-btn";
+    btn.type = "button";
+    btn.textContent = "指定をコピー";
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(declaration);
+        btn.textContent = "コピーしました";
+      } catch {
+        btn.textContent = "コピーできませんでした";
+      }
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = "指定をコピー";
+        btn.disabled = false;
+      }, 2000);
+    });
+
+    foot.appendChild(cssValue);
+    foot.appendChild(btn);
+
+    card.appendChild(head);
+    card.appendChild(sample);
+    card.appendChild(foot);
+    list.appendChild(card);
+  }
+
+  input.addEventListener("input", () => {
+    const text = input.value.trim() === "" ? "（文章を入力してください）" : input.value;
+    for (const sample of samples) sample.textContent = text;
+  });
+</script>
+</body>
+</html>
