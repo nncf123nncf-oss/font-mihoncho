@@ -191,7 +191,7 @@
     { name: "游明朝",               css: '"Yu Mincho", "YuMincho", serif',                                   os: "両方" },
     { name: "メイリオ",             css: '"Meiryo", sans-serif',                                             os: "Windows" },
     { name: "BIZ UDPゴシック",      css: '"BIZ UDPGothic", sans-serif',                                      os: "Windows" },
-    { name: "BIZ UDP明朝",          css: '"BIZ UDPMincho", serif',                                           os: "Windows" },
+    { name: "BIZ UDP明朝",          css: '"BIZ UDPMincho Medium", "BIZ UDPMincho", serif',                   os: "Windows" },
     { name: "UD デジタル 教科書体", css: '"UD Digi Kyokasho N-R", "UD デジタル 教科書体 N-R", sans-serif',   os: "Windows" },
     { name: "MS Pゴシック",         css: '"MS PGothic", "ＭＳ Ｐゴシック", sans-serif',                      os: "Windows" },
     { name: "MS P明朝",             css: '"MS PMincho", "ＭＳ Ｐ明朝", serif',                               os: "Windows" },
@@ -243,7 +243,6 @@
     const sample = document.createElement("p");
     sample.className = "sample";
     sample.style.fontFamily = font.css;
-    sample.textContent = input.value;
     samples.push(sample);
 
     const foot = document.createElement("div");
@@ -281,10 +280,12 @@
     list.appendChild(card);
   }
 
-  input.addEventListener("input", () => {
+  function render() {
     const text = input.value.trim() === "" ? "（文章を入力してください）" : input.value;
     for (const sample of samples) sample.textContent = text;
-  });
+  }
+  input.addEventListener("input", render);
+  render();
 </script>
 </body>
 </html>
